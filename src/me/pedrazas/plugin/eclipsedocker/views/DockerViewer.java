@@ -1,5 +1,7 @@
 package me.pedrazas.plugin.eclipsedocker.views;
 
+import me.pedrazas.plugin.eclipsedocker.utils.DockerUtils;
+
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -8,6 +10,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
+import com.spotify.docker.client.DockerException;
 import com.spotify.docker.client.messages.Container;
 
 
@@ -67,7 +70,12 @@ public class DockerViewer extends TableViewer{
         column.setLabelProvider(new ColumnLabelProvider(){
             public String getText(Object element) {
                 if(element instanceof Container){
-                	return ((Container) element).portsAsString();
+                	
+                	try {
+						return DockerUtils.getPortsAsString(((Container) element).id());
+					} catch (DockerException | InterruptedException e) {
+						e.printStackTrace();
+					}
                 }
                 return super.getText(element);
             }

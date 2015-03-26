@@ -1,12 +1,15 @@
 package me.pedrazas.plugin.eclipsedocker.utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.DockerException;
 import com.spotify.docker.client.messages.Container;
+import com.spotify.docker.client.messages.PortBinding;
 
 public class DockerUtils {
 
@@ -36,5 +39,38 @@ public class DockerUtils {
 			e.printStackTrace();
 		}
 		return new ArrayList<Container>();
+	}
+	
+	public static String getPortsAsString(String containerId) throws DockerException, InterruptedException{
+		DockerClient client = getDockerClient();
+		Map<String, List<PortBinding>> ports = client.inspectContainer(containerId).networkSettings().ports();
+		
+		Iterator<String> it = ports.keySet().iterator();
+		StringBuilder sb = new StringBuilder();
+		while(it.hasNext()){
+			String key = it.next();
+			List<PortBinding> bindings = ports.get(key);
+			if(bindings != null){
+				for(PortBinding pb : bindings){
+					 if (sb.length() > 0) {
+		                   sb.append(", ");
+		               }
+		               if (pb.hostIp() != null) {
+		                   sb.append(pb.hostIp()).append(":");
+		               }
+		               if (pb.hostPort() != null) {
+		                   sb.append(key).append("->").append(pb.hostPort());
+		               } else {
+		                   sb.append(key);
+		               }
+				}
+			}else{
+				if (sb.length() > 0) {
+	                   sb.append(", ");
+	               }
+				sb.append(key);
+			}
+		}
+		return sb.toString();
 	}
 }
