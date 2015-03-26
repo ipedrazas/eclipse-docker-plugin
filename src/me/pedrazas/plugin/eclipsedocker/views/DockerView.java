@@ -1,6 +1,8 @@
 package me.pedrazas.plugin.eclipsedocker.views;
 
 
+import me.pedrazas.plugin.eclipsedocker.utils.DockerUtils;
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
@@ -58,7 +60,7 @@ public class DockerView extends ViewPart {
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
+			return DockerUtils.getImageFromRunningContainers();
 		}
 	}
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -144,7 +146,7 @@ public class DockerView extends ViewPart {
 				showMessage("Action 1 executed");
 			}
 		};
-		action1.setText("Action 1");
+		action1.setText("Stop");
 		action1.setToolTipText("Action 1 tooltip");
 		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
@@ -154,7 +156,7 @@ public class DockerView extends ViewPart {
 				showMessage("Action 2 executed");
 			}
 		};
-		action2.setText("Action 2");
+		action2.setText("Inspect");
 		action2.setToolTipText("Action 2 tooltip");
 		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));

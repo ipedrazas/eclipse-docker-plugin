@@ -6,6 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: eclipsedocker.Activator
 Bundle-Vendor: ipedrazas
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ me.pedrazas.rcp.dockerplugin.libs;bundle-version="1.0.0",
+ org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
