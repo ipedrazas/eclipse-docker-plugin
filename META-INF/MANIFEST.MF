@@ -7,7 +7,8 @@ Bundle-Activator: eclipsedocker.Activator
 Bundle-Vendor: ipedrazas
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- me.pedrazas.rcp.dockerplugin.libs;bundle-version="1.0.0",
- org.junit
+ org.junit,
+ me.pedrazas.rcp.dockerplugin.libs;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Import-Package: com.spotify.docker.client.messages

@@ -24,9 +24,17 @@ public class DockerUtils {
 				images.add(c.image());
 			}
 		} catch (DockerException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return images.toArray();
+	}
+	public static List<Container> getRunningContainers(){
+		DockerClient client = getDockerClient();
+		try {
+			return client.listContainers();
+		} catch (DockerException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<Container>();
 	}
 }
