@@ -28,8 +28,8 @@ public class DockerViewer extends TableViewer{
     }
 
     private void createColumns(){
-        String[] titles = { "Image", "Command", "Name", "Ports", "Status" };
-        int[] bounds = { 200, 350, 100, 350, 100 };
+        String[] titles = { "Image", "Command", "Name", "Ports", "Status", "Id" };
+        int[] bounds = { 200, 350, 100, 350, 150, 200 };
 
         TableViewerColumn column = createTableViewerColumn(titles[0], bounds[0], 0);
         column.setLabelProvider(new ColumnLabelProvider(){
@@ -86,6 +86,15 @@ public class DockerViewer extends TableViewer{
             public String getText(Object element) {
                 if(element instanceof Container)
                     return ((Container)element).status();
+                return super.getText(element);
+            }
+        });
+        
+        column = createTableViewerColumn(titles[5], bounds[5], 5);
+        column.setLabelProvider(new ColumnLabelProvider(){
+            public String getText(Object element) {
+                if(element instanceof Container)
+                    return ((Container)element).id();
                 return super.getText(element);
             }
         });

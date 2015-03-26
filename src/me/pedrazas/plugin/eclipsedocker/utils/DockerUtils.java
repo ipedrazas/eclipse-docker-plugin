@@ -73,4 +73,13 @@ public class DockerUtils {
 		}
 		return sb.toString();
 	}
+	
+	public static void stopContainer(String containerId){
+		DockerClient client = getDockerClient();
+		try {
+			client.stopContainer(containerId, 5);
+		} catch (DockerException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }

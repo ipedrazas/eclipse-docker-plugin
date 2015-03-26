@@ -1,6 +1,8 @@
 package me.pedrazas.plugin.eclipsedocker.views;
 
 
+import me.pedrazas.plugin.eclipsedocker.utils.DockerUtils;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -22,6 +24,8 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.spotify.docker.client.messages.Container;
+
 
 
 public class DockerView extends ViewPart {
@@ -32,7 +36,7 @@ public class DockerView extends ViewPart {
 	public static final String ID = "me.pedrazas.plugin.eclipsedocker.views.DockerView";
 
 	private TableViewer viewer;
-	private Action action1;
+	private Action stop;
 	private Action action2;
 	private Action doubleClickAction;
 
@@ -59,6 +63,7 @@ public class DockerView extends ViewPart {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
+		
 	}
 
 	private void hookContextMenu() {
@@ -81,32 +86,39 @@ public class DockerView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
+		manager.add(stop);
 		manager.add(new Separator());
 		manager.add(action2);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
+		manager.add(stop);
 		manager.add(action2);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
+		manager.add(stop);
 		manager.add(action2);
 	}
 
 	private void makeActions() {
-		action1 = new Action() {
+		stop = new Action() {
 			public void run() {
-				showMessage("Action 1 executed");
+				ISelection selection = viewer.getSelection();
+				Object obj = ((IStructuredSelection)selection).getFirstElement();
+				Container container =(Container) ((IStructuredSelection)selection).getFirstElement();
+				DockerUtils.stopContainer(container.id());
+				viewer.setContentProvider(new DockerProvider());
+				viewer.setInput(getViewSite());
 			}
+			
+			    
 		};
-		action1.setText("Stop");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+		stop.setText("Stop");
+		stop.setToolTipText("Action 1 tooltip");
+		stop.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
 		action2 = new Action() {
@@ -121,11 +133,13 @@ public class DockerView extends ViewPart {
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				showMessage("Double-click detected on "+obj.toString());
+				Container container =(Container) ((IStructuredSelection)selection).getFirstElement();
+				showMessage("Double-click detected on "+ container.id());
 			}
 		};
 	}
+	
+
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
