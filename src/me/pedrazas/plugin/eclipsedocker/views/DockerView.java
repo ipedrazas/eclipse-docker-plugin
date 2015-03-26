@@ -151,7 +151,7 @@ public class DockerView extends ViewPart {
 	private void showMessage(String message) {
 		MessageDialog.openInformation(
 			viewer.getControl().getShell(),
-			"Docker View",
+			"Docker - Running Containers",
 			message);
 	}
 

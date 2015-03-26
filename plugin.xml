@@ -9,7 +9,7 @@
             id="EclipseDocker">
       </category>
       <view
-            name="Docker View"
+            name="Docker -- Running Containers"
             icon="icons/sample.gif"
             category="EclipseDocker"
             class="me.pedrazas.plugin.eclipsedocker.views.DockerView"
