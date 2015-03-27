@@ -37,6 +37,7 @@ public class DockerView extends ViewPart {
 
 	private TableViewer viewer;
 	private Action stop;
+	private Action refresh;
 	private Action action2;
 	private Action doubleClickAction;
 
@@ -89,11 +90,13 @@ public class DockerView extends ViewPart {
 		manager.add(stop);
 		manager.add(new Separator());
 		manager.add(action2);
+		manager.add(refresh);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(stop);
 		manager.add(action2);
+		manager.add(refresh);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -101,6 +104,7 @@ public class DockerView extends ViewPart {
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(stop);
 		manager.add(action2);
+		manager.add(refresh);
 	}
 
 	private void makeActions() {
@@ -117,9 +121,21 @@ public class DockerView extends ViewPart {
 			    
 		};
 		stop.setText("Stop");
-		stop.setToolTipText("Action 1 tooltip");
+		stop.setToolTipText("Stop container");
 		stop.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		
+		refresh = new Action(){
+			public void run(){
+				viewer.setContentProvider(new DockerProvider());
+				viewer.setInput(getViewSite());
+			}
+		};
+		
+		refresh.setText("Refresh");
+		refresh.setToolTipText("Refresh table");
+		stop.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
 		action2 = new Action() {
 			public void run() {
@@ -130,6 +146,7 @@ public class DockerView extends ViewPart {
 		action2.setToolTipText("Action 2 tooltip");
 		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
