@@ -9,6 +9,7 @@ import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.DockerException;
 import com.spotify.docker.client.messages.Container;
+import com.spotify.docker.client.messages.ContainerInfo;
 import com.spotify.docker.client.messages.PortBinding;
 
 public class DockerUtils {
@@ -41,10 +42,7 @@ public class DockerUtils {
 		return new ArrayList<Container>();
 	}
 	
-	public static String getPortsAsString(String containerId) throws DockerException, InterruptedException{
-		DockerClient client = getDockerClient();
-		Map<String, List<PortBinding>> ports = client.inspectContainer(containerId).networkSettings().ports();
-		
+	public static String portBindingAsString(Map<String, List<PortBinding>> ports){
 		Iterator<String> it = ports.keySet().iterator();
 		StringBuilder sb = new StringBuilder();
 		while(it.hasNext()){
@@ -72,6 +70,21 @@ public class DockerUtils {
 			}
 		}
 		return sb.toString();
+	}
+	public static String getPortsAsString(String containerId) throws DockerException, InterruptedException{
+		DockerClient client = getDockerClient();
+		Map<String, List<PortBinding>> ports = client.inspectContainer(containerId).networkSettings().ports();		
+		return portBindingAsString(ports);
+	}
+	
+	public static ContainerInfo inspectContainer(String containerId){
+		DockerClient client = getDockerClient();
+		try {
+			return client.inspectContainer(containerId);
+		} catch (DockerException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static void stopContainer(String containerId){

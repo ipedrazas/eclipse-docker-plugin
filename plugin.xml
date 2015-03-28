@@ -34,5 +34,14 @@
             file="contexts.xml">
       </contexts>
    </extension>
-
+<extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="com.spotify.docker.client.messages.Container"
+            class="me.pedrazas.plugin.eclipsedocker.adapter.ContainerAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.properties.IPropertySource">
+         </adapter>
+      </factory>
+</extension> 
 </plugin>

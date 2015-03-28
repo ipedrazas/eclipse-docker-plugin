@@ -25,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.spotify.docker.client.messages.Container;
+import com.spotify.docker.client.messages.ContainerInfo;
 
 
 
@@ -38,7 +39,7 @@ public class DockerView extends ViewPart {
 	private TableViewer viewer;
 	private Action stop;
 	private Action refresh;
-	private Action action2;
+	private Action inspect;
 	private Action doubleClickAction;
 
 
@@ -55,8 +56,9 @@ public class DockerView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		viewer = new DockerViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new DockerProvider());
-		viewer.setInput(getViewSite());
 		
+		getSite().setSelectionProvider(viewer);
+		viewer.setInput(getViewSite());
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "EclipseDocker.viewer");
@@ -89,13 +91,13 @@ public class DockerView extends ViewPart {
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(stop);
 		manager.add(new Separator());
-		manager.add(action2);
+		manager.add(inspect);
 		manager.add(refresh);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(stop);
-		manager.add(action2);
+		manager.add(inspect);
 		manager.add(refresh);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -103,7 +105,7 @@ public class DockerView extends ViewPart {
 	
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(stop);
-		manager.add(action2);
+		manager.add(inspect);
 		manager.add(refresh);
 	}
 
@@ -137,14 +139,16 @@ public class DockerView extends ViewPart {
 		stop.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
-		action2 = new Action() {
+		inspect = new Action() {
 			public void run() {
-				showMessage("Action 2 executed");
+				ISelection selection = viewer.getSelection();
+				Container container =(Container) ((IStructuredSelection)selection).getFirstElement();
+				ContainerInfo info = DockerUtils.inspectContainer(container.id());
 			}
 		};
-		action2.setText("Inspect");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+		inspect.setText("Inspect");
+		inspect.setToolTipText("Isnpect container");
+		inspect.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
 		doubleClickAction = new Action() {
