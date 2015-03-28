@@ -8,4 +8,6 @@ This plugin displays all the running conatiners.
 There are two actions that can be executed via popup menu:
 
 * Stop Container
-* Inspect Container
+* Refresh
+
+When a container is selected, the properties page is populated. Properties are populated based on the `Docker inspect` command.
