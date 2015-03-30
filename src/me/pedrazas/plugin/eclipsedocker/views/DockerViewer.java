@@ -56,7 +56,6 @@ public class DockerViewer extends TableViewer{
             public String getText(Object element) {
                 if(element instanceof Container){
                 	if(((Container)element).names() != null){
-                		System.out.println(((Container)element).names().toString());
                         return String.join(",", ((Container)element).names());
                 	}                	
                 }
@@ -69,8 +68,7 @@ public class DockerViewer extends TableViewer{
         column = createTableViewerColumn(titles[3], bounds[3], 3);
         column.setLabelProvider(new ColumnLabelProvider(){
             public String getText(Object element) {
-                if(element instanceof Container){
-                	
+                if(element instanceof Container){                	
                 	try {
 						return DockerUtils.getPortsAsString(((Container) element).id());
 					} catch (DockerException | InterruptedException e) {

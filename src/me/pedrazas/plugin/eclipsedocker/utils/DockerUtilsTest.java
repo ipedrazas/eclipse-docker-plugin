@@ -4,6 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.spotify.docker.client.DockerException;
+import com.spotify.docker.client.messages.Container;
+
 public class DockerUtilsTest {
 
 	@Before
@@ -22,4 +25,16 @@ public class DockerUtilsTest {
 		}
 	}
 
+	@Test
+	public void testGetPortsAsString() {
+		Object[] containers = DockerUtils.getRunningContainers().toArray();
+		for(Object c:containers){
+			try {
+				String id = ((Container) c).id();
+				System.out.println(DockerUtils.getPortsAsString(id));
+			} catch (DockerException | InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
